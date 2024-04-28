@@ -27,5 +27,7 @@ userSchema.pre("save", async function (next) {
     throw new Error("Fallo el hash de contraseña");
   }
 });
-
+userSchema.methods.comparePassword = async function(canditatepassword){
+  return await bcryptjs.compare(canditatepassword, this.password)
+}
 export const User = mongoose.model("User", userSchema);

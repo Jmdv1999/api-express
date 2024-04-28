@@ -20,6 +20,21 @@ export const register = async (req, res) => {
     return res.status(500).json({ error: "Algo fallo en el servidor" });
   }
 };
-export const login = (req, res) => {
-  res.json({ ok: "login" });
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    let user = await User.findOne({ email });
+    if (!user)
+      return res
+        .status(403)
+        .json({ error: "No existe un usuario con este correo electronico" });
+    const respuestaPassword = await user.comparePassword(password);
+    if (!respuestaPassword)
+      return res.status(403).json({ error: "contraseña incorrecta" });
+    //Generar JWT
+    return res.json({ ok: "login" });
+  } catch (error) {
+    return res.status(500).json({ error: "Algo fallo en el servidor" });
+  }
 };
