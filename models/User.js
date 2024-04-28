@@ -24,7 +24,6 @@ userSchema.pre("save", async function (next) {
     user.password = await bcryptjs.hash(user.password, salt);
     next();
   } catch (error) {
-    console.log(error);
     throw new Error("Fallo el hash de contraseña");
   }
 });
