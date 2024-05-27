@@ -1,4 +1,5 @@
 import { User } from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   const { email, password } = req.body;
@@ -33,7 +34,9 @@ export const login = async (req, res) => {
     if (!respuestaPassword)
       return res.status(403).json({ error: "contraseña incorrecta" });
     //Generar JWT
-    return res.json({ ok: "login" });
+    const token = jwt.sign({uid: user.id}, process.env.SECRET)
+
+    return res.json({ token : token});
   } catch (error) {
     return res.status(500).json({ error: "Algo fallo en el servidor" });
   }
